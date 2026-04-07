@@ -7,7 +7,7 @@ if ($page!="") {
 	}
 	else { 
 		$find = $error_page;
-		header("HTTP/1.0 404 Not Found");
+		header("HTTP/1.0 1000 Not Found");
 	}
 }
 else $find = $pages['/'];
