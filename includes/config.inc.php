@@ -1,18 +1,18 @@
 <?php
 $pagetitle = array(
-    'title' => 'Simple Website Ltd.',
+    'title' => 'Net Pizzeria',
 );
 
 $header = array(
-    'imagesource' => 'logo.png',
-    'imagealt' => 'logo',
-	'title' => 'Simple Website',
-	'motto' => ''
+    'imagesource' => 'logo.png', 
+    'imagealt' => 'Net Pizzeria Logo',
+	'title' => 'Net Pizzeria',
+	'motto' => 'Open day and night for your cravings!'
 );
 
 $footer = array(
     'copyright' => 'Copyright '.date("Y").'.',
-    'firm' => 'Simple Website Ltd.'
+    'firm' => 'Net Pizzeria'
 );
 
 $pages = array(
@@ -20,7 +20,7 @@ $pages = array(
 	'introduction' => array('file' => 'introduction', 'text' => 'Introduction', 'menun' => array(1,1)),
 	'contact' => array('file' => 'contact', 'text' => 'Contact', 'menun' => array(1,1)),
 	'articles' => array('file' => 'articles', 'text' => 'Articles', 'menun' => array(1,1)),
-    'table' => array('file' => 'table', 'text' => 'Table', 'menun' => array(1,1)),
+    'table' => array('file' => 'table', 'text' => 'Pizzas', 'menun' => array(1,1)),
     'login' => array('file' => 'login', 'text' => 'Login', 'menun' => array(1,0)),
     'login2' => array('file' => 'login2', 'text' => '', 'menun' => array(0,0)),
     'logout' => array('file' => 'logout', 'text' => 'Logout', 'menun' => array(0,1)),
