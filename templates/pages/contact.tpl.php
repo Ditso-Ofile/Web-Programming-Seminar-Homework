@@ -1,51 +1,104 @@
-<?php 
-$success = isset($sent_successfully) ? $sent_successfully : false; 
-$err_list = isset($errors) ? $errors : [];
-?>
-
 <script type="text/javascript">
-function validateContactForm() {
-    var name = document.forms["contactForm"]["name"].value;
-    var email = document.forms["contactForm"]["email"].value;
-    var message = document.forms["contactForm"]["message"].value;
 
-    if (name == "" || email == "" || message == "") {
-        alert("All fields must be filled out using JavaScript validation.");
+function validateContactForm() {
+    var name = document.getElementById("name").value.trim();
+    var email = document.getElementById("email").value.trim();
+    var message = document.getElementById("message").value.trim();
+    var errorMessages = [];
+
+    
+    if (name === "") {
+        errorMessages.push("- Name field cannot be empty.");
+    } else if (name.length < 5) {
+        errorMessages.push("- Name must be at least 5 characters.");
+    }
+
+    var emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+    if (email === "") {
+        errorMessages.push("- Email field cannot be empty.");
+    } else if (!emailPattern.test(email)) {
+        errorMessages.push("- Please enter a valid email address.");
+    }
+
+    if (message === "") {
+        errorMessages.push("- Message field cannot be empty.");
+    }
+
+    
+    if (errorMessages.length > 0) {
+        alert("Please fix the following errors before submitting:\n\n" + errorMessages.join("\n"));
         return false;
     }
+    
     return true;
 }
 </script>
 
-<?php if ($success): ?>
-    <div class="alert alert-success">
-        <h2>Message Sent Successfully</h2>
-        <p><strong>Name:</strong> <?= htmlspecialchars($_POST['name'] ?? '') ?></p>
-        <p><strong>Email:</strong> <?= htmlspecialchars($_POST['email'] ?? '') ?></p>
-        <p><strong>Message:</strong> <?= nl2br(htmlspecialchars($_POST['message'] ?? '')) ?></p>
-        <br>
-        <a href="contact" class="btn btn-primary">Send another message</a>
-    </div>
-<?php else: ?>
+<article class="pizza-card">
 
-    <?php if (!empty($err_list)): ?>
-        <div class="alert alert-danger" style="color:red;">
-            <?php foreach($err_list as $err) echo "<p>$err</p>"; ?>
+    <?php if ($sent_successfully): ?>
+        
+        <div class="text-center py-5">
+            <h2 class="text-success mb-4">Message Sent Successfully!</h2>
+            <p class="lead text-muted mb-4">Thank you for reaching out to Net Pizzeria. Here is a copy of what you sent us:</p>
+            
+            <div class="card shadow-sm mx-auto text-start" style="max-width: 500px;">
+                <div class="card-body bg-light rounded">
+                    <p class="mb-2"><strong>Sender Name:</strong> <?= htmlspecialchars($_POST['name'] ?? '') ?></p>
+                    <p class="mb-2"><strong>Sender Email:</strong> <?= htmlspecialchars($_POST['email'] ?? '') ?></p>
+                    <hr>
+                    <p class="mb-0"><strong>Message:</strong></p>
+                    <p class="mt-2 text-dark p-3 bg-white border rounded"><?= nl2br(htmlspecialchars($_POST['message'] ?? '')) ?></p>
+                </div>
+            </div>
+            
+            <a href="contact" class="btn btn-danger mt-4 fw-bold">Return to Contact Page</a>
+        </div>
+
+    <?php else: ?>
+        
+        <header class="mb-4 text-center border-bottom pb-3">
+            <h2 class="section-title fs-2">Contact Net Pizzeria</h2>
+            <p class="text-muted">Manager: <strong>Aws and Ditso</strong> | Email: <a href="mailto:somebody@simplewebsite.com" class="text-danger text-decoration-none">somebody@simplewebsite.com</a></p>
+        </header>
+
+        
+        <?php if (!empty($errors)): ?>
+            <div class="alert alert-danger shadow-sm">
+                <h5 class="alert-heading">Server Validation Failed:</h5>
+                <ul class="mb-0 mt-2">
+                    <?php foreach($errors as $err) echo "<li>$err</li>"; ?>
+                </ul>
+            </div>
+        <?php endif; ?>
+
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                
+                <form name="contactForm" action="contact" method="post" onsubmit="return validateContactForm()">
+                    
+                    <div class="mb-3">
+                        <label for="name" class="form-label fw-bold">Name (minimum 5 characters):</label>
+                        <input type="text" id="name" name="name" class="form-control" placeholder="Your Name" value="<?= htmlspecialchars($_POST['name'] ?? $default_name) ?>">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="email" class="form-label fw-bold">E-mail (required):</label>
+                        
+                        <input type="text" id="email" name="email" class="form-control" placeholder="your.email@example.com" value="<?= htmlspecialchars($_POST['email'] ?? '') ?>">
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="message" class="form-label fw-bold">Message (required):</label>
+                        <textarea id="message" name="message" rows="5" class="form-control" placeholder="Write your message here..."><?= htmlspecialchars($_POST['message'] ?? '') ?></textarea>
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <input type="submit" name="contact_submit" value="Send Message" class="btn btn-success fw-bold text-uppercase px-4 py-2 shadow-sm">
+                    </div>
+                    
+                </form>
+            </div>
         </div>
     <?php endif; ?>
-
-    <h2>Contact Information</h2>
-    <p>Manager: <strong>Aws and Ditso</strong></p>
-    <p>E-mail: <strong>somebody@simplewebsite.com</strong></p>
-
-    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m12!1m3!1d2725.203649492147!2d19.6669509!3d46.8960799!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4743da7a6c479e1d%3A0xc8292b3f6dc69e7f!2sPallasz%20Ath%C3%A9n%C3%A9%20Egyetem%20GAMF%20Kar!5e0!3m2!1sen!2shu!4v1619524000000!5m2!1sen!2shu" width="100%" height="400" frameborder="0" style="border:0" allowfullscreen></iframe>
-    <br><br>
-
-    <h3>Send us a message</h3>
-    <form name="contactForm" action="contact" method="post" onsubmit="return validateContactForm()">
-        <p>Name:<br> <input type="text" name="name" class="form-control"></p>
-        <p>Email:<br> <input type="text" name="email" class="form-control"></p>
-        <p>Message:<br> <textarea name="message" rows="5" class="form-control"></textarea></p>
-        <p><input type="submit" name="contact_submit" value="Send Message" class="btn btn-success"></p>
-    </form>
-<?php endif; ?>
+</article>

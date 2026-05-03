@@ -1,20 +1,22 @@
 <?php
-$messages = [];
-$error_msg = null;
 
-if (isset($_SESSION['login'])) {
-    try {
-        $dbh = new PDO('mysql:host=localhost;dbname=databaselesson', 'root', '',
-                        array(PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION));
-        $dbh->query('SET NAMES utf8 COLLATE utf8_general_ci');
+if (!isset($_SESSION['login'])) {
+    header("Location: ?login");
+    exit;
+}
 
-        $stmt = $dbh->query("SELECT sender_name, sender_email, message_text, sent_at FROM messages ORDER BY sent_at DESC");
-        $messages = $stmt->fetchAll(PDO::FETCH_ASSOC);
+try {
+    
+    $dbh = new PDO('mysql:host=localhost;dbname=databaselesson', 'root', '',
+                    array(PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION));
+    $dbh->query('SET NAMES utf8 COLLATE utf8_general_ci');
 
-    } catch (PDOException $e) {
-        $error_msg = "Error fetching messages: " . $e->getMessage();
-    }
-} else {
-    $error_msg = "You must be logged in to view messages.";
+    
+    $sql = "SELECT sender_name, email, message, created_at FROM messages ORDER BY created_at DESC";
+    $sth = $dbh->query($sql);
+    $messages_data = $sth->fetchAll(PDO::FETCH_ASSOC);
+
+} catch (PDOException $e) {
+    $db_error = "Database Error: " . $e->getMessage();
 }
 ?>
